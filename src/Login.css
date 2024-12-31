@@ -7,7 +7,7 @@
 }
 
 .login-form {
-    @apply bg-white p-10 rounded-lg shadow-lg w-full max-w-md;
+    @apply bg-white p-10 rounded-lg shadow-2xl w-full max-w-md;
 }
 
 .form-title {
@@ -62,5 +62,17 @@
 .social-button {
     @apply p-3 rounded-full border border-gray-300 hover:bg-gray-50 
     transition-colors focus:outline-none focus:ring-2 
-    focus:ring-indigo-500 focus:ring-offset-2;
+    focus:ring-indigo-500 focus:ring-offset-2 flex items-center justify-center;
+}
+
+.google-button {
+    @apply bg-white border border-gray-300 text-gray-700 hover:bg-gray-100;
+}
+
+.apple-button {
+    @apply bg-black text-white border border-gray-300 hover:bg-gray-800;
+}
+
+.social-icon {
+    @apply h-5 w-5 mr-2;
 }

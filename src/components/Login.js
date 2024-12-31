@@ -6,6 +6,9 @@ import { MsalProvider, MsalAuthenticationTemplate } from '@azure/msal-react';
 import { PublicClientApplication } from '@azure/msal-browser';
 import AppleSignin from 'react-apple-signin-auth';
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline';
+import { FcGoogle } from 'react-icons/fc';
+import { FaApple } from 'react-icons/fa';
+import '../Login.css';
 
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
@@ -137,33 +140,41 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
+    <div className="login-container">
+      <div className="login-form">
         <div>
-          <h2 className="text-3xl font-bold text-center text-gray-900">Sign in</h2>
+          <h2 className="form-title">Sign in</h2>
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleEmailLogin}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div className="relative">
-              <EnvelopeIcon className="h-5 w-5 absolute top-3 left-3 text-gray-400" />
+          <div className="input-group">
+            <label className="input-label" htmlFor="email">Email address</label>
+            <div className="input-field">
+              <EnvelopeIcon className="input-icon" />
               <input
+                id="email"
+                name="email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none rounded-t-md relative block w-full px-10 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10"
+                className="w-full"
                 placeholder="Email address"
               />
             </div>
-            <div className="relative">
-              <LockClosedIcon className="h-5 w-5 absolute top-3 left-3 text-gray-400" />
+          </div>
+          <div className="input-group">
+            <label className="input-label" htmlFor="password">Password</label>
+            <div className="input-field">
+              <LockClosedIcon className="input-icon" />
               <input
+                id="password"
+                name="password"
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-b-md relative block w-full px-10 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10"
+                className="w-full"
                 placeholder="Password"
               />
             </div>
@@ -174,46 +185,52 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="login-button"
           >
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
-            </div>
-          </div>
+        <button type="button" className="forgot-password" onClick={() => navigate('/forgot-password')}>Forgot your password?</button>
 
-          <div className="mt-6 grid grid-cols-3 gap-3">
-            <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={handleGoogleError}
-              />
-            </GoogleOAuthProvider>
+        <div className="divider">
+          <span className="divider-text">Or continue with</span>
+        </div>
 
-            <MsalProvider instance={msalInstance}>
-              <MsalAuthenticationTemplate
-                onSuccess={handleMicrosoftSuccess}
-                onError={() => setError('Microsoft Sign In Failed')}
-              />
-            </MsalProvider>
+        <div className="social-login">
+          <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              className="social-button google-button"
+            >
+              <FcGoogle className="social-icon" />
+              <span>Sign in with Google</span>
+            </GoogleLogin>
+          </GoogleOAuthProvider>
 
-            <AppleSignin
-              clientId={process.env.REACT_APP_APPLE_CLIENT_ID}
-              redirectURI={process.env.REACT_APP_APPLE_REDIRECT_URI}
-              onSuccess={handleAppleSuccess}
-              onError={() => setError('Apple Sign In Failed')}
-              scope="email name"
-              className="apple-auth-btn"
-            />
-          </div>
+          <MsalProvider instance={msalInstance}>
+            <MsalAuthenticationTemplate
+              onSuccess={handleMicrosoftSuccess}
+              onError={() => setError('Microsoft Sign In Failed')}
+              className="social-button"
+            >
+              <img src="https://img.icons8.com/color/48/000000/microsoft.png" alt="Microsoft" className="social-icon" />
+              <span>Sign in with Microsoft</span>
+            </MsalAuthenticationTemplate>
+          </MsalProvider>
+
+          <AppleSignin
+            clientId={process.env.REACT_APP_APPLE_CLIENT_ID}
+            redirectURI={process.env.REACT_APP_APPLE_REDIRECT_URI}
+            onSuccess={handleAppleSuccess}
+            onError={() => setError('Apple Sign In Failed')}
+            scope="email name"
+            className="social-button apple-button"
+          >
+            <FaApple className="social-icon" />
+            <span>Sign in with Apple</span>
+          </AppleSignin>
         </div>
       </div>
     </div>
