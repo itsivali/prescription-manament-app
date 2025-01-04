@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gql, useMutation } from '@apollo/client';
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
-import '../Login.css';
+import './Login.css';
 
 const FORGOT_PASSWORD_MUTATION = gql`
   mutation ForgotPassword($email: String!) {

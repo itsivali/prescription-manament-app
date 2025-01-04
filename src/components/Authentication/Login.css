@@ -56,23 +56,38 @@
 }
 
 .social-login {
-    @apply flex justify-center space-x-4 mt-6;
+    @apply flex flex-col space-y-4 w-full px-4 mt-6;
 }
 
 .social-button {
-    @apply p-3 rounded-full border border-gray-300 hover:bg-gray-50 
-    transition-colors focus:outline-none focus:ring-2 
-    focus:ring-indigo-500 focus:ring-offset-2 flex items-center justify-center;
+    @apply flex items-center justify-center w-full py-3 px-6 rounded-lg border shadow-sm
+    transition-all duration-200 ease-in-out text-sm font-medium;
+    height: 48px; /* Standardizing button height */
+}
+
+.social-button span {
+    @apply ml-3; /* Adding consistent spacing for text */
 }
 
 .google-button {
-    @apply bg-white border border-gray-300 text-gray-700 hover:bg-gray-100;
+    @apply bg-white border-gray-300 text-gray-700 
+    hover:bg-gray-50 hover:shadow-md;
+}
+
+.microsoft-button {
+    @apply bg-white border-gray-300 text-gray-700 
+    hover:bg-gray-50 hover:shadow-md;
 }
 
 .apple-button {
-    @apply bg-black text-white border border-gray-300 hover:bg-gray-800;
+    @apply bg-black text-white border-transparent 
+    hover:bg-gray-900 hover:shadow-md;
 }
 
 .social-icon {
-    @apply h-5 w-5 mr-2;
+    @apply h-5 w-5;
+}
+
+.signup-link {
+    @apply mt-6 text-center text-sm;
 }

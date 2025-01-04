@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { gql, useMutation } from '@apollo/client';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { MsalProvider, MsalAuthenticationTemplate } from '@azure/msal-react';
 import { PublicClientApplication } from '@azure/msal-browser';
-import AppleSignin from 'react-apple-signin-auth';
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 import { FcGoogle } from 'react-icons/fc';
-import { FaApple } from 'react-icons/fa';
-import '../Login.css';
+import { FaApple, FaMicrosoft } from 'react-icons/fa';
+import './Login.css'; 
 
 const REGISTER_MUTATION = gql`
   mutation Register($email: String!, $password: String!) {
@@ -46,23 +44,17 @@ const REGISTER_WITH_MICROSOFT_MUTATION = gql`
   }
 `;
 
-const REGISTER_WITH_APPLE_MUTATION = gql`
-  mutation RegisterWithApple($token: String!) {
-    registerWithApple(token: $token) {
-      token
-      user {
-        id
-        email
-      }
-    }
-  }
-`;
-
+// Microsoft MSAL Configuration
 const msalConfig = {
   auth: {
     clientId: process.env.REACT_APP_MICROSOFT_CLIENT_ID,
     authority: "https://login.microsoftonline.com/common",
     redirectUri: window.location.origin,
+    postLogoutRedirectUri: window.location.origin,
+  },
+  cache: {
+    cacheLocation: "localStorage",
+    storeAuthStateInCookie: false,
   },
 };
 
@@ -78,7 +70,6 @@ function Register() {
   const [registerMutation] = useMutation(REGISTER_MUTATION);
   const [registerWithGoogleMutation] = useMutation(REGISTER_WITH_GOOGLE_MUTATION);
   const [registerWithMicrosoftMutation] = useMutation(REGISTER_WITH_MICROSOFT_MUTATION);
-  const [registerWithAppleMutation] = useMutation(REGISTER_WITH_APPLE_MUTATION);
 
   const handleEmailRegister = async (e) => {
     e.preventDefault();
@@ -90,7 +81,7 @@ function Register() {
       localStorage.setItem('token', data.register.token);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message);
+      setError('Registration failed');
     } finally {
       setLoading(false);
     }
@@ -98,9 +89,8 @@ function Register() {
 
   const handleGoogleSuccess = async (response) => {
     try {
-      const token = response.credential;
       const { data } = await registerWithGoogleMutation({
-        variables: { token }
+        variables: { token: response.credential }
       });
       localStorage.setItem('token', data.registerWithGoogle.token);
       navigate('/dashboard');
@@ -109,16 +99,17 @@ function Register() {
     }
   };
 
-  const handleGoogleError = () => {
-    setError('Google registration failed');
-  };
-
-  const handleMicrosoftSuccess = async (response) => {
+  const handleMicrosoftLogin = async () => {
     try {
-      const token = response.accessToken;
-      const { data } = await registerWithMicrosoftMutation({
-        variables: { token }
+      const loginResponse = await msalInstance.loginPopup({
+        scopes: ["user.read"],
+        prompt: "select_account"
       });
+      
+      const { data } = await registerWithMicrosoftMutation({
+        variables: { token: loginResponse.accessToken }
+      });
+      
       localStorage.setItem('token', data.registerWithMicrosoft.token);
       navigate('/dashboard');
     } catch (err) {
@@ -126,25 +117,10 @@ function Register() {
     }
   };
 
-  const handleAppleSuccess = async (response) => {
-    try {
-      const token = response.authorization.id_token;
-      const { data } = await registerWithAppleMutation({
-        variables: { token }
-      });
-      localStorage.setItem('token', data.registerWithApple.token);
-      navigate('/dashboard');
-    } catch (err) {
-      setError('Apple registration failed');
-    }
-  };
-
   return (
     <div className="login-container">
       <div className="login-form">
-        <div>
-          <h2 className="form-title">Sign up</h2>
-        </div>
+        <h2 className="form-title">Create Account</h2>
         
         <form className="mt-8 space-y-6" onSubmit={handleEmailRegister}>
           <div className="input-group">
@@ -187,11 +163,9 @@ function Register() {
             disabled={loading}
             className="login-button"
           >
-            {loading ? 'Signing up...' : 'Sign up'}
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
-
-        <button type="button" className="forgot-password" onClick={() => navigate('/login')}>Already have an account? Sign in</button>
 
         <div className="divider">
           <span className="divider-text">Or continue with</span>
@@ -201,36 +175,37 @@ function Register() {
           <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-              className="social-button google-button"
-            >
-              <FcGoogle className="social-icon" />
-              <span>Sign up with Google</span>
-            </GoogleLogin>
+              onError={() => setError('Google login failed')}
+              render={(renderProps) => (
+                <button
+                  className="social-button google-button"
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                >
+                  <FcGoogle className="social-icon" />
+                  <span>Continue with Google</span>
+                </button>
+              )}
+            />
           </GoogleOAuthProvider>
 
-          <MsalProvider instance={msalInstance}>
-            <MsalAuthenticationTemplate
-              onSuccess={handleMicrosoftSuccess}
-              onError={() => setError('Microsoft Sign Up Failed')}
-              className="social-button"
-            >
-              <img src="https://img.icons8.com/color/48/000000/microsoft.png" alt="Microsoft" className="social-icon" />
-              <span>Sign up with Microsoft</span>
-            </MsalAuthenticationTemplate>
-          </MsalProvider>
-
-          <AppleSignin
-            clientId={process.env.REACT_APP_APPLE_CLIENT_ID}
-            redirectURI={process.env.REACT_APP_APPLE_REDIRECT_URI}
-            onSuccess={handleAppleSuccess}
-            onError={() => setError('Apple Sign Up Failed')}
-            scope="email name"
-            className="social-button apple-button"
+          <button 
+            className="social-button microsoft-button"
+            onClick={handleMicrosoftLogin}
           >
+            <FaMicrosoft className="social-icon text-blue-500" />
+            <span>Continue with Microsoft</span>
+          </button>
+
+          <button className="social-button apple-button">
             <FaApple className="social-icon" />
-            <span>Sign up with Apple</span>
-          </AppleSignin>
+            <span>Continue with Apple</span>
+          </button>
+        </div>
+
+        <div className="signup-link">
+          <span className="text-gray-600">Already have an account? </span>
+          <Link to="/login" className="text-indigo-600 hover:text-indigo-800">Sign in</Link>
         </div>
       </div>
     </div>
