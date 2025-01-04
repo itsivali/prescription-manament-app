@@ -1,0 +1,124 @@
+.doctor-dashboard {
+    @apply flex min-h-screen bg-gray-100;
+  }
+  
+  .dashboard-sidebar {
+    @apply w-64 bg-white shadow-lg flex flex-col;
+  }
+  
+  .sidebar-header {
+    @apply p-6 border-b border-gray-200 flex flex-col items-center;
+  }
+  
+  .doctor-icon {
+    @apply w-16 h-16 text-blue-500 mb-4;
+  }
+  
+  .sidebar-nav {
+    @apply flex-1 p-4;
+  }
+  
+  .nav-item {
+    @apply flex items-center w-full px-4 py-3 mb-2 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors;
+  }
+  
+  .nav-item.active {
+    @apply bg-blue-50 text-blue-600;
+  }
+  
+  .nav-item svg {
+    @apply w-5 h-5 mr-3;
+  }
+  
+  .logout-button {
+    @apply flex items-center px-4 py-3 text-gray-600 hover:text-red-600 transition-colors;
+  }
+  
+  .dashboard-main {
+    @apply flex-1 p-8;
+  }
+  
+  .dashboard-header {
+    @apply flex items-center justify-between mb-8;
+  }
+  
+  .search-bar {
+    @apply flex items-center px-4 py-2 bg-white rounded-lg shadow-sm w-64;
+  }
+  
+  .search-bar input {
+    @apply ml-3 outline-none;
+  }
+  
+  .header-actions {
+    @apply flex items-center space-x-4;
+  }
+  
+  .notification-btn {
+    @apply relative p-2 text-gray-600 hover:text-blue-600 transition-colors;
+  }
+  
+  .notification-badge {
+    @apply absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center;
+  }
+  
+  .profile-pic {
+    @apply w-10 h-10 rounded-full;
+  }
+  
+  .stats-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8;
+  }
+  
+  .stat-card {
+    @apply bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow;
+  }
+  
+  .stat-value {
+    @apply text-3xl font-bold text-gray-900 my-2;
+  }
+  
+  .stat-label {
+    @apply text-sm text-gray-500;
+  }
+  
+  .dashboard-grid {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-8;
+  }
+  
+  .calendar-section,
+  .appointments-section {
+    @apply bg-white p-6 rounded-xl shadow-sm;
+  }
+  
+  .dashboard-calendar {
+    @apply w-full border-none shadow-sm rounded-lg;
+  }
+  
+  .appointment-list {
+    @apply space-y-4 mt-4;
+  }
+  
+  .appointment-card {
+    @apply flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors;
+  }
+  
+  .appointment-time {
+    @apply text-sm font-semibold text-gray-900 w-24;
+  }
+  
+  .appointment-info {
+    @apply flex-1;
+  }
+  
+  .appointment-info h4 {
+    @apply font-medium text-gray-900;
+  }
+  
+  .appointment-info p {
+    @apply text-sm text-gray-500;
+  }
+  
+  .appointment-action {
+    @apply px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-medium;
+  }
