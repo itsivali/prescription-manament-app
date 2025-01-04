@@ -51,7 +51,6 @@ const msalConfig = {
 };
 
 const msalInstance = new PublicClientApplication(msalConfig);
-
 function Login() {
   const navigate = useNavigate();
   const [error, setError] = useState('');
@@ -60,37 +59,49 @@ function Login() {
   const [loginWithMicrosoftMutation] = useMutation(LOGIN_WITH_MICROSOFT_MUTATION);
   const [loginWithAppleMutation] = useMutation(LOGIN_WITH_APPLE_MUTATION);
 
-  const handleGoogleSuccess = async (response) => {
-    try {
-      const token = response.credential;
-      const { data } = await loginWithGoogleMutation({ variables: { token } });
-      localStorage.setItem('token', data.loginWithGoogle.token);
-      navigate('/dashboard');
-    } catch {
-      setError('Google login failed');
-    }
-  };
+const handleGoogleSuccess = async (response) => {
+  try {
+    const { data } = await loginWithGoogleMutation({
+      variables: { token: response.credential }
+    });
+    localStorage.setItem('token', data.loginWithGoogle.token);
+    navigate('/role-selection');
+  } catch (err) {
+    setError('Google login failed');
+  }
+};
 
-  const handleMicrosoftSuccess = async () => {
+const handleMicrosoftSuccess = async (response) => {
+  try {
+    const { data } = await loginWithMicrosoftMutation({
+      variables: { token: response.accessToken }
+    });
+    localStorage.setItem('token', data.loginWithMicrosoft.token);
+    navigate('/role-selection');
+  } catch (err) {
+    setError('Microsoft login failed');
+  }
+};
+
+const handleAppleSuccess = async (response) => {
+  try {
+    const { data } = await loginWithAppleMutation({
+      variables: { token: response.authorization.id_token }
+    });
+    localStorage.setItem('token', data.loginWithApple.token);
+    navigate('/role-selection');
+  } catch (err) {
+    setError('Apple login failed');
+  }
+};
+  const handleMicrosoftLogin = async () => {
     try {
-      const response = await msalInstance.loginPopup();
-      const token = response.accessToken;
-      const { data } = await loginWithMicrosoftMutation({ variables: { token } });
-      localStorage.setItem('token', data.loginWithMicrosoft.token);
-      navigate('/dashboard');
-    } catch {
+      const loginResponse = await msalInstance.loginPopup({
+        scopes: ["user.read"]
+      });
+      handleMicrosoftSuccess(loginResponse);
+    } catch (err) {
       setError('Microsoft login failed');
-    }
-  };
-
-  const handleAppleSuccess = async (response) => {
-    try {
-      const token = response.authorization.id_token;
-      const { data } = await loginWithAppleMutation({ variables: { token } });
-      localStorage.setItem('token', data.loginWithApple.token);
-      navigate('/dashboard');
-    } catch {
-      setError('Apple login failed');
     }
   };
 
@@ -105,7 +116,6 @@ function Login() {
           <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
-              onError={() => setError('Google login failed')}
               render={({ onClick }) => (
                 <button className="social-button google-button" onClick={onClick}>
                   <FaApple className="social-icon" />
@@ -115,7 +125,7 @@ function Login() {
             />
           </GoogleOAuthProvider>
 
-          <button className="social-button microsoft-button" onClick={handleMicrosoftSuccess}>
+          <button className="social-button microsoft-button" onClick={handleMicrosoftLogin}>
             <FaMicrosoft className="social-icon text-blue-500" />
             <span className="social-text">Continue with Microsoft</span>
           </button>
