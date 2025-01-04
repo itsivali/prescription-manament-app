@@ -16,8 +16,9 @@ import './App.css';
 function App() {
   return (
     <ApolloProvider client={client}>
-      <Router>
+      <Router>      
         <div className="App">
+          <h1 className="app-name">Prescription Management System</h1>
           <Routes>
             <Route path="/" element={<Navigate to="/register" />} />
             <Route path="/register" element={<Register />} />

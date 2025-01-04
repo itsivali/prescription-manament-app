@@ -72,11 +72,11 @@ function Register() {
         scopes: ["user.read"],
         prompt: "select_account"
       });
-      
+
       const { data } = await registerWithMicrosoftMutation({
         variables: { token: loginResponse.accessToken }
       });
-      
+
       localStorage.setItem('token', data.registerWithMicrosoft.token);
       navigate('/dashboard');
     } catch (err) {
@@ -86,18 +86,21 @@ function Register() {
 
   return (
     <div className="login-container">
-      <div className="login-form">
+      <div className="login-form">      
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-center text-gray-900 mb-2">
+           
+          </h1>                  
+        </div>
+
         <div>
           <h2 className="form-title">Create Account</h2>
         </div>
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
-
-       
-
         <div className="social-login">
           <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-            <button 
+            <button
               className="social-button google-button"
               onClick={handleGoogleSuccess}
             >
@@ -106,7 +109,7 @@ function Register() {
             </button>
           </GoogleOAuthProvider>
 
-          <button 
+          <button
             className="social-button microsoft-button"
             onClick={handleMicrosoftLogin}
           >

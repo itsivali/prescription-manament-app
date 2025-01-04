@@ -2,6 +2,11 @@
   text-align: center;
 }
 
+.app-name {
+  @apply text-4xl font-extrabold py-4 bg-gradient-to-r from-purple-400 via-green-500 to-orange-600;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
