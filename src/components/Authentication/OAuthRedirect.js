@@ -21,6 +21,19 @@ function OAuthRedirect() {
   const [oauthLoginMutation] = useMutation(OAUTH_LOGIN_MUTATION);
 
   useEffect(() => {
+    const handleOAuthLogin = async (provider, token) => {
+      try {
+        const { data } = await oauthLoginMutation({
+          variables: { provider, token }
+        });
+        localStorage.setItem('token', data.oauthLogin.token);
+        navigate('/dashboard');
+      } catch (err) {
+        console.error('OAuth login failed', err);
+        navigate('/login');
+      }
+    };
+
     const query = new URLSearchParams(location.search);
     const provider = query.get('provider');
     const token = query.get('token');
@@ -30,20 +43,7 @@ function OAuthRedirect() {
     } else {
       navigate('/login');
     }
-  }, [location, navigate, handleOAuthLogin]);
-
-  const handleOAuthLogin = async (provider, token) => {
-    try {
-      const { data } = await oauthLoginMutation({
-        variables: { provider, token }
-      });
-      localStorage.setItem('token', data.oauthLogin.token);
-      navigate('/dashboard');
-    } catch (err) {
-      console.error('OAuth login failed', err);
-      navigate('/login');
-    }
-  };
+  }, [location, navigate, oauthLoginMutation]);
 
   return (
     <div className="login-container">
