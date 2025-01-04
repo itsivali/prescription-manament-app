@@ -1,0 +1,41 @@
+.role-selection-container {
+    @apply min-h-screen flex items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500;
+  }
+  
+  .role-selection-card {
+    @apply bg-white p-8 rounded-xl shadow-2xl w-full max-w-2xl mx-4;
+  }
+  
+  .role-selection-title {
+    @apply text-3xl font-bold text-center text-gray-900 mb-2;
+  }
+  
+  .role-selection-subtitle {
+    @apply text-gray-600 text-center mb-8;
+  }
+  
+  .role-options {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+  }
+  
+  .role-option {
+    @apply flex flex-col items-center p-6 rounded-xl border-2 border-transparent
+    transition-all duration-300 hover:border-blue-500 hover:shadow-xl
+    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+  
+  .role-option.selected {
+    @apply border-blue-500 bg-blue-50;
+  }
+  
+  .role-icon {
+    @apply w-16 h-16 text-blue-500 mb-4;
+  }
+  
+  .role-label {
+    @apply text-xl font-semibold text-gray-900 mb-2;
+  }
+  
+  .role-description {
+    @apply text-sm text-gray-600 text-center;
+  }
