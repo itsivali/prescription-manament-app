@@ -2,7 +2,7 @@ import React from 'react';
 import { ApolloProvider } from '@apollo/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { client } from './ApolloClient';
-import Login from './components/Login';
+import Login from './components/Authentication/Login';
 import './App.css';
 
 function App() {
