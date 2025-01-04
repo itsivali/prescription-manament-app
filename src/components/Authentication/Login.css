@@ -7,7 +7,7 @@
 }
 
 .login-form {
-    @apply bg-white p-10 rounded-lg shadow-2xl w-full max-w-md;
+    @apply bg-white p-10 rounded-lg shadow-2xl w-full max-w-md flex flex-col items-center;
 }
 
 .form-title {
@@ -15,7 +15,7 @@
 }
 
 .input-group {
-    @apply mb-6;
+    @apply mb-6 w-full;
 }
 
 .input-label {
@@ -43,7 +43,7 @@
 }
 
 .divider {
-    @apply my-8 flex items-center text-gray-500;
+    @apply my-8 flex items-center text-gray-500 w-full;
 }
 
 .divider::before,
@@ -60,7 +60,7 @@
 }
 
 .social-button {
-    @apply flex items-center justify-center w-full py-3 px-6 rounded-lg border shadow-sm
+    @apply flex items-center justify-center w-64 py-3 px-6 rounded-lg border shadow-sm
     transition-all duration-200 ease-in-out text-sm font-medium;
     height: 48px; /* Standardizing button height */
 }
