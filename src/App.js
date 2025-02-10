@@ -3,7 +3,6 @@ import { ApolloProvider } from '@apollo/client';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { client } from './ApolloClient';
 import Login from './components/Authentication/Login';
 import Register from './components/Authentication/Register';
 import RoleSelection from './components/Authentication/RoleSelection';
@@ -11,6 +10,7 @@ import DoctorDashboard from './components/Dashboard/DoctorDashboard';
 import PharmacistDashboard from './components/Dashboard/PharmacistDashboard';
 import ForgotPassword from './components/Authentication/ForgotPassword';
 import OAuthRedirect from './components/Authentication/OAuthRedirect';
+import client from './ApolloClient';
 import './App.css';
 
 function App() {
