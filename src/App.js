@@ -2,6 +2,7 @@ import React from 'react';
 import { ApolloProvider } from '@apollo/client';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import 'react-toastify/dist/ReactToastify.css';
 import Login from './components/Authentication/Login';
 import Register from './components/Authentication/Register';
@@ -16,22 +17,24 @@ import './App.css';
 function App() {
   return (
     <ApolloProvider client={client}>
-      <Router>      
-        <div className="App">
-          <h1 className="app-name">Prescription Management System</h1>
-          <Routes>
-            <Route path="/" element={<Navigate to="/register" />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/role-selection" element={<RoleSelection />} />
-            <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
-            <Route path="/pharmacist-dashboard" element={<PharmacistDashboard />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/oauth-redirect" element={<OAuthRedirect />} />
-          </Routes>
-        </div>
-        <ToastContainer position="top-right" autoClose={3000} />
-      </Router>
+      <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+        <Router>
+          <div className="App">
+            <h1 className="app-name">Prescription Management System</h1>
+            <Routes>
+              <Route path="/" element={<Navigate to="/register" />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/role-selection" element={<RoleSelection />} />
+              <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+              <Route path="/pharmacist-dashboard" element={<PharmacistDashboard />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/oauth-redirect" element={<OAuthRedirect />} />
+            </Routes>
+            <ToastContainer position="top-right" autoClose={3000} />
+          </div>
+        </Router>
+      </GoogleOAuthProvider>
     </ApolloProvider>
   );
 }
