@@ -12,7 +12,7 @@ const typeDefs = gql`
     createdAt: String
   }
 
-  # Response type for login mutation
+  # Response type for login and register mutations
   type AuthResponse {
     token: String!
     user: User!
@@ -90,6 +90,7 @@ const typeDefs = gql`
 
   # Mutations for authentication, role management, and prescription/inventory actions
   type Mutation {
+    register(email: String!, password: String!, role: String!): AuthResponse!
     login(email: String!, password: String!): AuthResponse!
     updateUserRole(role: String!): UpdateResponse!
     createPrescription(input: PrescriptionInput!): Prescription!
