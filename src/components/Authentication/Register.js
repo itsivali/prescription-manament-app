@@ -26,7 +26,6 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  // Default role is PATIENT; user can also select others from the dropdown
   const [role, setRole] = useState('PATIENT');
   const [error, setError] = useState('');
   const [isFormExpanded, setIsFormExpanded] = useState(false);
@@ -61,7 +60,6 @@ function Register() {
     }
   };
 
-  // SSO Handlers (simulate registration via SSO)
   const handleGoogleSuccess = async (response) => {
     try {
       localStorage.setItem('token', response.credential);
