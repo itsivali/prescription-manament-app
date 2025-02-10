@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { gql, useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
-import { GoogleLogin } from '@react-oauth/google';
-import { FaEnvelope, FaLock, FaUser, FaChevronDown } from 'react-icons/fa';
 import 'react-toastify/dist/ReactToastify.css';
+import { useGoogleLogin } from '@react-oauth/google';
 import './Login.css';
 
 const REGISTER_MUTATION = gql`
@@ -29,7 +28,6 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('PATIENT');
   const [error, setError] = useState('');
-  const [isFormExpanded, setIsFormExpanded] = useState(false);
 
   const [registerMutation, { loading }] = useMutation(REGISTER_MUTATION);
 
@@ -61,6 +59,20 @@ function Register() {
     }
   };
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: tokenResponse => {
+      console.log(tokenResponse);
+      // Handle the Google login success here
+      // You can send the token to your backend for verification and user creation
+      toast.success('Google login successful!');
+      navigate('/patient-dashboard'); // Or wherever you want to redirect
+    },
+    onError: errorResponse => {
+      console.log(errorResponse);
+      toast.error('Google login failed!');
+    },
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-500 to-indigo-600 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
@@ -71,7 +83,7 @@ function Register() {
               <h1 className="text-2xl font-semibold">Register</h1>
             </div>
             <div className="divide-y divide-gray-200">
-              <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+              <form onSubmit={handleSubmit} className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
                 {error && <p className="text-red-500">{error}</p>}
                 <div className="relative">
                   <input
@@ -151,7 +163,15 @@ function Register() {
                     {loading ? 'Registering...' : 'Register'}
                   </button>
                 </div>
-              </div>
+                <div className="relative mt-4">
+                  <button
+                    onClick={googleLogin}
+                    className="w-full bg-red-500 text-white rounded-md px-2 py-1 hover:bg-red-600 transition-colors"
+                  >
+                    Register with Google
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
