@@ -1,4 +1,5 @@
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -16,8 +17,32 @@ async function startServer() {
     typeDefs,
     resolvers,
     context: ({ req }) => {
-      // Optionally extract auth information from request headers
-      return { req };
+      // Check for auth token in request headers.
+      const authHeader = req.headers.authorization || '';
+      const token = authHeader.replace('Bearer ', '');
+      let user;
+
+      if (token) {
+        try {
+          user = jwt.verify(token, process.env.JWT_SECRET);
+        } catch (err) {
+          console.error('Invalid token', err);
+        }
+      }
+
+      // Fallback: provide a default test doctor user if none is authenticated.
+      if (!user) {
+        user = {
+          id: "D1",
+          email: "doctor@test.com",
+          role: "DOCTOR",
+          name: "Dr. Test",
+          specialization: "General Medicine",
+          licenseNumber: "TEST123",
+          createdAt: new Date().toISOString()
+        };
+      }
+      return { req, user };
     }
   });
   
